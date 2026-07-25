@@ -7,7 +7,14 @@ const path = require("path")
 const app = express()
 
 app.use(express.json())
-app.use(cors())
+app.use(
+  cors({
+    origin: [
+      "https://your-frontend.vercel.app",
+      "http://localhost:3000"
+    ]
+  })
+)
 
 
 // Serve images
