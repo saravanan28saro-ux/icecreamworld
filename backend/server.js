@@ -10,7 +10,7 @@ app.use(express.json())
 app.use(
   cors({
     origin: [
-      "https://your-frontend.vercel.app",
+      "https://icecreamworld-lq6z-545jp7wjh-saravanans-projects-effc06f0.vercel.app/",
       "http://localhost:3000"
     ]
   })

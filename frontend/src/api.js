@@ -1,7 +1,7 @@
 const API_URL =
   process.env.NODE_ENV === "development"
     ? "http://localhost:5000"
-    : "https://your-backend.vercel.app" // Replace with your backend URL
+    : "https://icecreamworld.vercel.app/" // Replace with your backend URL
 
 // Get Flavors
 export const getFlavors = async () => {
