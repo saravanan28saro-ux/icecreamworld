@@ -17,29 +17,27 @@ app.use(
 )
 
 
+// Database path
 const dbPath = path.join(__dirname, "icecream.db")
 
 let db = null
 
 
+// Initialize database
 const initializeDB = async () => {
   try {
-
     db = await open({
       filename: dbPath,
       driver: sqlite3.Database,
     })
 
     console.log("Database Connected")
-
   } catch (error) {
     console.log("Database Error:", error.message)
   }
 }
 
-
 initializeDB()
-
 
 
 // Home route
@@ -50,82 +48,86 @@ app.get("/", (request, response) => {
 
 // Get all flavors
 app.get("/flavors", async (request, response) => {
-
-  const data = await db.all(
-    "SELECT * FROM flavors"
-  )
-
-  response.json(data)
-
+  try {
+    const data = await db.all("SELECT * FROM flavors")
+    response.json(data)
+  } catch (error) {
+    response.status(500).json({
+      error: error.message,
+    })
+  }
 })
 
 
 // Get single flavor
 app.get("/flavors/:id", async (request, response) => {
+  try {
+    const { id } = request.params
 
-  const { id } = request.params
+    const data = await db.get(
+      "SELECT * FROM flavors WHERE id = ?",
+      [id]
+    )
 
-  const data = await db.get(
-    "SELECT * FROM flavors WHERE id = ?",
-    [id]
-  )
-
-
-  if (data) {
-    response.json(data)
-  } else {
-    response.status(404).json({
-      message: "Flavor not found"
+    if (data) {
+      response.json(data)
+    } else {
+      response.status(404).json({
+        message: "Flavor not found",
+      })
+    }
+  } catch (error) {
+    response.status(500).json({
+      error: error.message,
     })
   }
-
 })
 
 
 // History
 app.get("/history", async (request, response) => {
-
-  const data = await db.all(
-    "SELECT * FROM history"
-  )
-
-  response.json(data)
-
+  try {
+    const data = await db.all("SELECT * FROM history")
+    response.json(data)
+  } catch (error) {
+    response.status(500).json({
+      error: error.message,
+    })
+  }
 })
 
 
 // How to make
 app.get("/howtomake", async (request, response) => {
-
-  const data = await db.all(
-    "SELECT * FROM howtomake"
-  )
-
-  response.json(data)
-
+  try {
+    const data = await db.all("SELECT * FROM howtomake")
+    response.json(data)
+  } catch (error) {
+    response.status(500).json({
+      error: error.message,
+    })
+  }
 })
 
 
 // Reviews
 app.get("/reviews", async (request, response) => {
-
-  const data = await db.all(
-    "SELECT * FROM reviews"
-  )
-
-  response.json(data)
-
+  try {
+    const data = await db.all("SELECT * FROM reviews")
+    response.json(data)
+  } catch (error) {
+    response.status(500).json({
+      error: error.message,
+    })
+  }
 })
 
 
-
-// Local server start
+// Start server locally
 if (require.main === module) {
-
   app.listen(5000, () => {
     console.log("Server running at http://localhost:5000")
   })
-
 }
 
 
