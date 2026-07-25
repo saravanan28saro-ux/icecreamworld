@@ -1,6 +1,6 @@
 const express = require("express")
 const sqlite3 = require("sqlite3")
-const {open} = require("sqlite")
+const { open } = require("sqlite")
 const cors = require("cors")
 const path = require("path")
 
@@ -11,7 +11,10 @@ app.use(cors())
 
 
 // Serve images
-app.use("/images", express.static(path.join(__dirname, "images")))
+app.use(
+  "/images",
+  express.static(path.join(__dirname, "images"))
+)
 
 
 const dbPath = path.join(__dirname, "icecream.db")
@@ -21,6 +24,7 @@ let db = null
 
 const initializeDB = async () => {
   try {
+
     db = await open({
       filename: dbPath,
       driver: sqlite3.Database,
@@ -29,7 +33,7 @@ const initializeDB = async () => {
     console.log("Database Connected")
 
   } catch (error) {
-    console.log(error.message)
+    console.log("Database Error:", error.message)
   }
 }
 
@@ -37,7 +41,8 @@ const initializeDB = async () => {
 initializeDB()
 
 
-// Home
+
+// Home route
 app.get("/", (request, response) => {
   response.send("Ice Cream API Running")
 })
@@ -51,13 +56,14 @@ app.get("/flavors", async (request, response) => {
   )
 
   response.json(data)
+
 })
 
 
-// Get one flavor
+// Get single flavor
 app.get("/flavors/:id", async (request, response) => {
 
-  const {id} = request.params
+  const { id } = request.params
 
   const data = await db.get(
     "SELECT * FROM flavors WHERE id = ?",
@@ -65,14 +71,14 @@ app.get("/flavors/:id", async (request, response) => {
   )
 
 
-  if(data){
+  if (data) {
     response.json(data)
-  }
-  else{
+  } else {
     response.status(404).json({
-      message:"Flavor not found"
+      message: "Flavor not found"
     })
   }
+
 })
 
 
@@ -112,7 +118,16 @@ app.get("/reviews", async (request, response) => {
 })
 
 
-// Start server
-app.listen(5000, () => {
-  console.log("Server running at http://localhost:5000")
-})
+
+// Local server start
+if (require.main === module) {
+
+  app.listen(5000, () => {
+    console.log("Server running at http://localhost:5000")
+  })
+
+}
+
+
+// Export for Vercel
+module.exports = app
