@@ -7,14 +7,7 @@ const path = require("path")
 const app = express()
 
 app.use(express.json())
-app.use(
-  cors({
-    origin: [
-      "https://icecreamworld-lq6z-545jp7wjh-saravanans-projects-effc06f0.vercel.app/",
-      "http://localhost:3000"
-    ]
-  })
-)
+app.use(cors())
 
 
 // Serve images
